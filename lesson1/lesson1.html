@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lesson1</title>
+    <script>
+        //ES5.1 - 2011 - база
+        //ES6 (ES2015) - нововведения (стрелочные функции, промисы, генераторы, symbol)
+
+        //ES5
+        //Первая фаза - сканирование var и function (let не попадает).
+        //Вторая фаза - выполнение кода
+        console.log(window);
+        console.log(a);
+
+        var a = 8;
+        getMessage('Мой текст');
+        function getMessage(text) {
+            //[[LexicalEnvironment]] - закрытый объект, который содержит локальные переменные
+            //[[Scopes]] => window (создается в момент создания функции, стадия 1) - только для чтения, доступ
+            //[[LexicalEnvironment]] = {text: 'Мой текст', aaa: undefined, myMessage: function(), my2: undefined}
+            var aaa = 5;
+            //[[LexicalEnvironment]] = {text: 'Мой текст', aaa: 5, myMessage: function(), my2: undefined}
+
+            //Function declaration
+            function myMessage(my) {
+                //[[LexicalEnvironment]] => {my: 'Тест - aaa'} [0]
+                //[[LexicalEnvironment]] => {my: 'Тест - aaa', aaa: undefined} [1]
+                //aaa = 8; //Взять переменную aaa с уровня getMessage() и переопределить ее значение на 8 [0]
+                //Служебное свойство [[Scopes]] => getMessage()
+                var aaa = 8; //Создаем локальную переменную aaa и инициализируем ее значением 8 [1]
+                console.log('aaa myMessage()', aaa);
+                return my.toUpperCase();
+            }
+
+            //Function expression
+            var my2 = function () {
+                console.log('Отображение внешней переменной a', a);
+            };
+            //[[LexicalEnvironment]] = {text: 'Мой текст', aaa: 5, myMessage: function(), my2: function}
+
+            console.log('Message', text, aaa);
+            my2();
+            myMessage('Тест - aaa');
+            console.log('aaa getMessage()', aaa);
+            return 1;
+        }
+
+        //console.log(window);
+        //getMessage = 'Теперь эта функция';
+        console.log(getMessage);
+    </script>
+</head>
+<body>
+
+</body>
+</html>

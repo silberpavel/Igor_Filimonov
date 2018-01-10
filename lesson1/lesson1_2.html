@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Замыкания</title>
+    <script>
+        //Внешняя функция - называется замыканием (closure)
+        function one() {
+            //closure environment
+            var myData = 8; //private - данные
+
+            //Внутренняя функция - которая имеет доступ через [[Scopes]] к этим данным
+            function twoInner(myInt) {
+                console.log(++myData + myInt);
+            }
+
+            twoInner(5);
+        }
+
+        one();
+        var myData = 0;
+
+        //Внешняя функция - называется замыканием (closure)
+        function firstCounter() {
+            //closure environment - start
+            var i = 0; //private
+            return function () {
+                //Делаем что-то
+                return ++i;
+            }
+            //closure environment - end
+        }
+
+        var aaa = firstCounter();
+        console.log(aaa()); //1
+        console.log(aaa()); //2
+        console.log(aaa()); //3
+
+        var bbb = firstCounter();
+        console.log(bbb());
+        console.log(bbb());
+        console.log(bbb());
+        console.log(bbb());
+        console.log(bbb());
+
+        /**
+         * Более сложное замыкание.
+         * @param callbackUserFunc
+         * @returns {Function}
+         */
+        function firstCounterAndFync(callbackUserFunc) {
+            var i = 0;
+            return function () {
+                //Вызываем нашу функцию, если аргумент правильный
+                console.log(typeof (callbackUserFunc));
+                if(typeof (callbackUserFunc) === 'function'){
+                    callbackUserFunc(i); //Любой пользовательский код
+                    //Любое кол-во кода
+                    i++; //Функция вызвана
+                }
+                return i;
+            }
+        }
+
+        var myMessage = function (i) {
+            console.log('Функция myMessage() работает! 2*i=', 2*i);
+        };
+
+        console.log('---------');
+        var ccc = firstCounterAndFync(myMessage);
+        var cccCount = ccc();
+        console.log(cccCount);
+
+        cccCount = ccc();
+        console.log(cccCount);
+
+        cccCount = ccc();
+        console.log(cccCount);
+
+        if(ccc() === (cccCount + 1)){
+            console.log('Наша функция myMessage() выполнила свою задачу!');
+        }
+
+        var user = {
+            name: 'Anna',
+            email: '1@2.ru'
+        };
+
+        var ddd = firstCounterAndFync(user);
+        var dddCount = ddd();
+        console.log(dddCount);
+        if(dddCount === 0){
+            console.log('Код не выполнен, скорее всего передан неправильный аргумент');
+        }
+
+        dddCount = ddd();
+        console.log(dddCount);
+        if(dddCount === 0){
+            console.log('Код не выполнен, скорее всего передан неправильный аргумент');
+        }
+
+        dddCount = ddd();
+        console.log(dddCount);
+        if(dddCount === 0){
+            console.log('Код не выполнен, скорее всего передан неправильный аргумент');
+        }
+
+        //Без защиты данных
+        var eeeName = 'Anna';
+        function showName() {
+            //[[Scopes]] => window
+            //[[LexicalEnvironment]] => {eeeName: 'Egor'} [1]
+            //[[LexicalEnvironment]] => {eeeName: 'Alex'} [2]
+            console.log(eeeName);
+        }
+
+        showName('Egor'); //Anna
+        eeeName = 'Olga';
+        showName('Alex'); //Olga
+    </script>
+</head>
+<body>
+
+</body>
+</html>
