@@ -1,21 +1,18 @@
+// CLOSURES
 
-var addTo = function (passed) {
-  var add = function (inner) {
-    return passed + inner;
+function counter() {
+  var a = 0;
+
+  return function add() {
+    a++;
+    return a;
   }
-
-  return add;
 }
 
+var plus = counter();
 
-var addThree = addTo(3)
-var addOne = addTo(1)
-
-// console.dir(addThree);
-// console.dir(addOne);
-
-console.log(addThree(10));
-console.log(addOne(8));
-
-console.log(addThree(10));
-console.log(addOne(8));
+plus();
+plus();
+plus();
+plus();
+console.log(plus());
